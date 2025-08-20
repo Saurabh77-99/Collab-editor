@@ -71,12 +71,10 @@ const documentSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for better performance
 documentSchema.index({ owner: 1, createdAt: -1 });
 documentSchema.index({ 'collaborators.user': 1 });
 documentSchema.index({ 'shareLink.token': 1 });
 
-// Update lastModified on save
 documentSchema.pre('save', function(next) {
   this.lastModified = new Date();
   next();

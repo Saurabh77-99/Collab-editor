@@ -1,4 +1,3 @@
-// src/components/Editor/DocumentSettings.jsx
 import React, { useState } from 'react';
 import {
   Dialog,

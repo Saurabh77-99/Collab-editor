@@ -6,21 +6,18 @@ const { aiLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
-// Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Apply middleware to all AI routes
 router.use(authenticateToken);
 router.use(aiLimiter);
 
-// Helper function to get AI model
 const getModel = (modelName = 'gemini-1.5-flash-latest') => {
   return genAI.getGenerativeModel({ model: modelName });
 };
 
 // Helper function to handle AI request with timeout and error handling
 const makeAIRequest = async (model, prompt, options = {}) => {
-  const timeout = options.timeout || 30000; // 30 seconds default
+  const timeout = options.timeout || 30000;
   
   return Promise.race([
     model.generateContent(prompt),
@@ -363,14 +360,13 @@ router.get('/status', async (req, res) => {
   try {
     const model = getModel();
     
-    // Simple test to check if AI is working
     const testResult = await makeAIRequest(model, 'Reply with just "OK" if you are working.');
     
     res.status(200).json({
       success: true,
       data: {
         status: 'operational',
-        model: 'gemini-pro',
+        model: 'gemini-1.5-flash-latest',
         lastChecked: new Date(),
         response: testResult.response.text()
       }

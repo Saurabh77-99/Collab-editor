@@ -1,4 +1,3 @@
-// config/gemini.js
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 class GeminiConfig {
@@ -8,7 +7,7 @@ class GeminiConfig {
     }
     
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    this.defaultModel = 'gemini-pro';
+    this.defaultModel = 'gemini-1.5-flash-latest';
     this.requestTimeout = parseInt(process.env.AI_REQUEST_TIMEOUT) || 30000;
     this.maxRequestsPerMinute = parseInt(process.env.MAX_AI_REQUESTS_PER_MINUTE) || 10;
   }

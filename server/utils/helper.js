@@ -1,4 +1,3 @@
-// utils/helpers.js
 const crypto = require('crypto');
 
 // Generate secure random token

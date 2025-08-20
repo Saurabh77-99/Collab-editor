@@ -1,6 +1,3 @@
-// src/utils/index.js
-
-// Format date for display
 export const formatDate = (date) => {
   if (!date) return '';
   

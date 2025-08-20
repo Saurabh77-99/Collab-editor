@@ -1,4 +1,3 @@
-// src/components/Editor/CollaboratorsList.jsx
 import React from 'react';
 import {
   Box,

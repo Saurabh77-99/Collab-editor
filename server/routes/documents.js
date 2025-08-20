@@ -10,7 +10,6 @@ const router = express.Router();
 // Apply authentication to all routes
 router.use(authenticateToken);
 
-// Helper function to check document permissions
 const checkDocumentPermission = async (documentId, userId, requiredPermission = 'viewer') => {
   const document = await Document.findById(documentId).populate('owner', 'username email');
   

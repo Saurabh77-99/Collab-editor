@@ -1,4 +1,3 @@
-// src/hooks/useDocument.js
 import { create } from 'zustand';
 import apiService from '../services/apiService';
 import toast from 'react-hot-toast';

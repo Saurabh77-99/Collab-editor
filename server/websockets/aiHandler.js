@@ -1,9 +1,7 @@
-// websockets/aiHandler.js
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Authenticate socket connection

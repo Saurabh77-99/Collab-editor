@@ -1,4 +1,3 @@
-// middleware/validation.js
 const { body, validationResult } = require('express-validator');
 const Joi = require('joi');
 

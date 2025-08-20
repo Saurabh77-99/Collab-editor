@@ -27,13 +27,12 @@ const permissionSchema = new mongoose.Schema({
   },
   expiresAt: {
     type: Date,
-    default: null // null means no expiration
+    default: null
   }
 }, {
   timestamps: true
 });
 
-// Compound index to ensure unique user-document permissions
 permissionSchema.index({ document: 1, user: 1 }, { unique: true });
 
 module.exports = mongoose.model('Permission', permissionSchema);

@@ -1,4 +1,3 @@
-// websockets/documentHandler.js
 const jwt = require('jsonwebtoken');
 const Document = require('../models/Document');
 const User = require('../models/User');

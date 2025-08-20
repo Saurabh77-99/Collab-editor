@@ -1,4 +1,3 @@
-// src/components/Editor/AIAssistant.jsx
 import React, { useState, useEffect } from "react";
 import {
   Box,

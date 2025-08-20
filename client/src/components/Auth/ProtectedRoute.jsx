@@ -1,4 +1,3 @@
-// src/components/Auth/ProtectedRoute.jsx
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '../../hooks/useAuth';

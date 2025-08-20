@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -6,8 +5,6 @@ import { CssBaseline, Box } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './hooks/useAuth';
 import { SocketProvider } from './services/socketService';
-
-// Components
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -16,7 +13,6 @@ import SharedDocument from './components/Shared/SharedDocument';
 import Navbar from './components/Layout/Navbar';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 
-// Create theme
 const theme = createTheme({
   palette: {
     mode: 'light',

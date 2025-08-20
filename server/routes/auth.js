@@ -6,7 +6,6 @@ const { authLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
-// Apply auth rate limiter to all routes
 router.use(authLimiter);
 
 // @route   POST /api/auth/register
@@ -16,7 +15,6 @@ router.post('/register', validateUserRegistration, async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email }, { username }]
     });
