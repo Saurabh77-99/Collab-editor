@@ -1,5 +1,5 @@
 // src/components/Editor/AIAssistant.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -21,12 +21,12 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon
-} from '@mui/material';
+  ListItemIcon,
+} from "@mui/material";
 import {
   AutoAwesome,
-//   Grammar,
-//   Enhancement,
+  Spellcheck,
+  Build,
   Summarize,
   AutoMode,
   Lightbulb,
@@ -34,15 +34,15 @@ import {
   ExpandMore,
   CheckCircle,
   Error,
-  Info
-} from '@mui/icons-material';
-import { useSocket } from '../../services/socketService';
-import apiService from '../../services/apiService';
-import toast from 'react-hot-toast';
+  Info,
+} from "@mui/icons-material";
+import { useSocket } from "../../services/socketService";
+import apiService from "../../services/apiService";
+import toast from "react-hot-toast";
 
 const AIAssistant = ({ documentId, selectedText, onClose }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const [results, setResults] = useState({});
   const [loading, setLoading] = useState(false);
   const [aiStatus, setAiStatus] = useState(null);
@@ -50,30 +50,30 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
   useEffect(() => {
     checkAIStatus();
-    
+
     if (socket) {
       const handleAISuggestions = (data) => {
-        setResults(prev => ({
+        setResults((prev) => ({
           ...prev,
-          [data.analysisType]: data
+          [data.analysisType]: data,
         }));
         setLoading(false);
       };
 
       const handleAICompletion = (data) => {
-        setResults(prev => ({
+        setResults((prev) => ({
           ...prev,
-          completion: data
+          completion: data,
         }));
         setLoading(false);
       };
 
-      on('ai-suggestions-ready', handleAISuggestions);
-      on('ai-completion-ready', handleAICompletion);
+      on("ai-suggestions-ready", handleAISuggestions);
+      on("ai-completion-ready", handleAICompletion);
 
       return () => {
-        off('ai-suggestions-ready', handleAISuggestions);
-        off('ai-completion-ready', handleAICompletion);
+        off("ai-suggestions-ready", handleAISuggestions);
+        off("ai-completion-ready", handleAICompletion);
       };
     }
   }, [socket, on, off]);
@@ -83,14 +83,14 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
       const response = await apiService.getAIStatus();
       setAiStatus(response.data);
     } catch (error) {
-      setAiStatus({ status: 'error' });
+      setAiStatus({ status: "error" });
     }
   };
 
   const handleAIRequest = async (type, options = {}) => {
     const text = inputText || selectedText;
     if (!text.trim()) {
-      toast.error('Please enter some text to analyze');
+      toast.error("Please enter some text to analyze");
       return;
     }
 
@@ -98,31 +98,43 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
     try {
       switch (type) {
-        case 'grammar':
+        case "grammar":
           const grammarResponse = await apiService.checkGrammar(text);
-          setResults(prev => ({ ...prev, grammar: grammarResponse.data }));
+          setResults((prev) => ({ ...prev, grammar: grammarResponse.data }));
           break;
-        
-        case 'enhance':
+
+        case "enhance":
           const enhanceResponse = await apiService.enhanceText(text, options);
-          setResults(prev => ({ ...prev, enhance: enhanceResponse.data }));
+          setResults((prev) => ({ ...prev, enhance: enhanceResponse.data }));
           break;
-        
-        case 'summarize':
-          const summarizeResponse = await apiService.summarizeText(text, options);
-          setResults(prev => ({ ...prev, summarize: summarizeResponse.data }));
+
+        case "summarize":
+          const summarizeResponse = await apiService.summarizeText(
+            text,
+            options
+          );
+          setResults((prev) => ({
+            ...prev,
+            summarize: summarizeResponse.data,
+          }));
           break;
-        
-        case 'complete':
+
+        case "complete":
           const completeResponse = await apiService.completeText(text, options);
-          setResults(prev => ({ ...prev, complete: completeResponse.data }));
+          setResults((prev) => ({ ...prev, complete: completeResponse.data }));
           break;
-        
-        case 'suggestions':
-          const suggestionsResponse = await apiService.getSuggestions(text, options);
-          setResults(prev => ({ ...prev, suggestions: suggestionsResponse.data }));
+
+        case "suggestions":
+          const suggestionsResponse = await apiService.getSuggestions(
+            text,
+            options
+          );
+          setResults((prev) => ({
+            ...prev,
+            suggestions: suggestionsResponse.data,
+          }));
           break;
-        
+
         default:
           break;
       }
@@ -139,15 +151,21 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
     return (
       <Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
           <Typography variant="h6">Grammar Check</Typography>
           <Chip
             label={`Score: ${data.overallScore}/100`}
-            color={data.overallScore >= 80 ? 'success' : data.overallScore >= 60 ? 'warning' : 'error'}
+            color={
+              data.overallScore >= 80
+                ? "success"
+                : data.overallScore >= 60
+                ? "warning"
+                : "error"
+            }
             size="small"
           />
         </Box>
-        
+
         {data.summary && (
           <Alert severity="info" sx={{ mb: 2 }}>
             {data.summary}
@@ -169,9 +187,7 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
             ))}
           </List>
         ) : (
-          <Alert severity="success">
-            No grammar issues found!
-          </Alert>
+          <Alert severity="success">No grammar issues found!</Alert>
         )}
       </Box>
     );
@@ -183,19 +199,22 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
     return (
       <Box>
-        <Typography variant="h6" gutterBottom>Enhanced Text</Typography>
-        
+        <Typography variant="h6" gutterBottom>
+          Enhanced Text
+        </Typography>
+
         <Card sx={{ mb: 2 }}>
           <CardContent>
-            <Typography variant="body1">
-              {data.enhancedText}
-            </Typography>
+            <Typography variant="body1">{data.enhancedText}</Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" onClick={() => {
-              navigator.clipboard.writeText(data.enhancedText);
-              toast.success('Enhanced text copied to clipboard');
-            }}>
+            <Button
+              size="small"
+              onClick={() => {
+                navigator.clipboard.writeText(data.enhancedText);
+                toast.success("Enhanced text copied to clipboard");
+              }}
+            >
               Copy Enhanced Text
             </Button>
           </CardActions>
@@ -211,7 +230,7 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
                 {data.changes.map((change, index) => (
                   <ListItem key={index}>
                     <ListItemIcon>
-                      <Enhancement />
+                      <Build/>
                     </ListItemIcon>
                     <ListItemText
                       primary={change.type}
@@ -233,14 +252,16 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
     return (
       <Box>
-        <Typography variant="h6" gutterBottom>Summary</Typography>
-        
+        <Typography variant="h6" gutterBottom>
+          Summary
+        </Typography>
+
         <Card sx={{ mb: 2 }}>
           <CardContent>
             <Typography variant="body1" paragraph>
               {data.summary}
             </Typography>
-            
+
             {data.keyPoints?.length > 0 && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="subtitle2" gutterBottom>
@@ -263,7 +284,8 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
         {data.wordCount && (
           <Alert severity="info">
-            Reduced from {data.wordCount.original} to {data.wordCount.summary} words
+            Reduced from {data.wordCount.original} to {data.wordCount.summary}{" "}
+            words
           </Alert>
         )}
       </Box>
@@ -276,8 +298,10 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
     return (
       <Box>
-        <Typography variant="h6" gutterBottom>Text Completion</Typography>
-        
+        <Typography variant="h6" gutterBottom>
+          Text Completion
+        </Typography>
+
         <Card sx={{ mb: 2 }}>
           <CardContent>
             <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -286,19 +310,25 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
             <Typography variant="body1" paragraph>
               {data.originalText}
             </Typography>
-            
+
             <Typography variant="body2" color="text.secondary" gutterBottom>
               Suggested completion:
             </Typography>
-            <Typography variant="body1" sx={{ bgcolor: 'action.hover', p: 1, borderRadius: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ bgcolor: "action.hover", p: 1, borderRadius: 1 }}
+            >
               {data.completion}
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" onClick={() => {
-              navigator.clipboard.writeText(data.completion);
-              toast.success('Completion copied to clipboard');
-            }}>
+            <Button
+              size="small"
+              onClick={() => {
+                navigator.clipboard.writeText(data.completion);
+                toast.success("Completion copied to clipboard");
+              }}
+            >
               Copy Completion
             </Button>
           </CardActions>
@@ -324,13 +354,29 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
     );
   };
 
-  const tabLabels = ['Grammar', 'Enhance', 'Summarize', 'Complete', 'Suggestions'];
+  const tabLabels = [
+    "Grammar",
+    "Enhance",
+    "Summarize",
+    "Complete",
+    "Suggestions",
+  ];
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       {/* Header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 2,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+        >
           <AutoAwesome color="primary" />
           AI Assistant
         </Typography>
@@ -341,8 +387,8 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
       {/* AI Status */}
       {aiStatus && (
-        <Alert 
-          severity={aiStatus.status === 'operational' ? 'success' : 'error'} 
+        <Alert
+          severity={aiStatus.status === "operational" ? "success" : "error"}
           sx={{ mb: 2 }}
         >
           AI Service: {aiStatus.status}
@@ -369,10 +415,10 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
         onChange={(e, newValue) => setActiveTab(newValue)}
         variant="scrollable"
         scrollButtons="auto"
-        sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
+        sx={{ mb: 2, borderBottom: 1, borderColor: "divider" }}
       >
-        <Tab label="Grammar" icon={<Grammar />} />
-        <Tab label="Enhance" icon={<Enhancement />} />
+        <Tab label="Grammar" icon={<Spellcheck />} />
+        <Tab label="Enhance" icon={<Build />} />
         <Tab label="Summarize" icon={<Summarize />} />
         <Tab label="Complete" icon={<AutoMode />} />
         <Tab label="Suggestions" icon={<Lightbulb />} />
@@ -384,55 +430,55 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
           <Button
             fullWidth
             variant="contained"
-            onClick={() => handleAIRequest('grammar')}
+            onClick={() => handleAIRequest("grammar")}
             disabled={loading || aiProcessing}
-            startIcon={loading ? <CircularProgress size={16} /> : <Grammar />}
+            startIcon={loading ? <CircularProgress size={16} /> : <Spellcheck />}
           >
             Check Grammar
           </Button>
         )}
-        
+
         {activeTab === 1 && (
           <Button
             fullWidth
             variant="contained"
-            onClick={() => handleAIRequest('enhance')}
+            onClick={() => handleAIRequest("enhance")}
             disabled={loading || aiProcessing}
-            startIcon={loading ? <CircularProgress size={16} /> : <Enhancement />}
+            startIcon={loading ? <CircularProgress size={16} /> : <Build />}
           >
             Enhance Text
           </Button>
         )}
-        
+
         {activeTab === 2 && (
           <Button
             fullWidth
             variant="contained"
-            onClick={() => handleAIRequest('summarize')}
+            onClick={() => handleAIRequest("summarize")}
             disabled={loading || aiProcessing}
             startIcon={loading ? <CircularProgress size={16} /> : <Summarize />}
           >
             Summarize
           </Button>
         )}
-        
+
         {activeTab === 3 && (
           <Button
             fullWidth
             variant="contained"
-            onClick={() => handleAIRequest('complete')}
+            onClick={() => handleAIRequest("complete")}
             disabled={loading || aiProcessing}
             startIcon={loading ? <CircularProgress size={16} /> : <AutoMode />}
           >
             Complete Text
           </Button>
         )}
-        
+
         {activeTab === 4 && (
           <Button
             fullWidth
             variant="contained"
-            onClick={() => handleAIRequest('suggestions')}
+            onClick={() => handleAIRequest("suggestions")}
             disabled={loading || aiProcessing}
             startIcon={loading ? <CircularProgress size={16} /> : <Lightbulb />}
           >
@@ -444,9 +490,16 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
       <Divider sx={{ mb: 2 }} />
 
       {/* Results Area */}
-      <Box sx={{ flex: 1, overflow: 'auto' }}>
+      <Box sx={{ flex: 1, overflow: "auto" }}>
         {loading || aiProcessing ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              py: 4,
+            }}
+          >
             <CircularProgress sx={{ mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
               AI is processing your request...
@@ -471,15 +524,17 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
 
     return (
       <Box>
-        <Typography variant="h6" gutterBottom>Writing Suggestions</Typography>
-        
+        <Typography variant="h6" gutterBottom>
+          Writing Suggestions
+        </Typography>
+
         {data.overallAssessment && (
           <Card sx={{ mb: 2 }}>
             <CardContent>
               <Typography variant="subtitle2" gutterBottom>
                 Overall Assessment
               </Typography>
-              
+
               {data.overallAssessment.strengths?.length > 0 && (
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="body2" color="success.main" gutterBottom>
@@ -504,14 +559,16 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
                     Areas for Improvement:
                   </Typography>
                   <List dense>
-                    {data.overallAssessment.areas_for_improvement.map((area, index) => (
-                      <ListItem key={index}>
-                        <ListItemIcon>
-                          <Info color="warning" />
-                        </ListItemIcon>
-                        <ListItemText primary={area} />
-                      </ListItem>
-                    ))}
+                    {data.overallAssessment.areas_for_improvement.map(
+                      (area, index) => (
+                        <ListItem key={index}>
+                          <ListItemIcon>
+                            <Info color="warning" />
+                          </ListItemIcon>
+                          <ListItemText primary={area} />
+                        </ListItem>
+                      )
+                    )}
                   </List>
                 </Box>
               )}
@@ -519,15 +576,23 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
           </Card>
         )}
 
-        {data.suggestions?.length > 0 && (
+        {data.suggestions?.length > 0 &&
           data.suggestions.map((suggestion, index) => (
             <Card key={index} sx={{ mb: 2 }}>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+                >
                   <Chip
                     label={suggestion.category}
                     size="small"
-                    color={suggestion.priority === 'high' ? 'error' : suggestion.priority === 'medium' ? 'warning' : 'default'}
+                    color={
+                      suggestion.priority === "high"
+                        ? "error"
+                        : suggestion.priority === "medium"
+                        ? "warning"
+                        : "default"
+                    }
                   />
                   <Chip
                     label={suggestion.priority}
@@ -539,14 +604,17 @@ const AIAssistant = ({ documentId, selectedText, onClose }) => {
                   {suggestion.suggestion}
                 </Typography>
                 {suggestion.example && (
-                  <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontStyle: "italic" }}
+                  >
                     Example: {suggestion.example}
                   </Typography>
                 )}
               </CardContent>
             </Card>
-          ))
-        )}
+          ))}
       </Box>
     );
   }

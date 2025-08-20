@@ -1,7 +1,7 @@
 // src/services/apiService.js
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/';
 
 // Create axios instance
 const apiClient = axios.create({
@@ -94,27 +94,27 @@ class ApiService {
 
   // AI endpoints
   async checkGrammar(text) {
-    return apiClient.post('/ai/grammar-check', { text });
+    return apiClient.post('/api/ai/grammar-check', { text });
   }
 
   async enhanceText(text, options = {}) {
-    return apiClient.post('/ai/enhance', { text, options });
+    return apiClient.post('/api/ai/enhance', { text, options });
   }
 
   async summarizeText(text, options = {}) {
-    return apiClient.post('/ai/summarize', { text, options });
+    return apiClient.post('/api/ai/summarize', { text, options });
   }
 
   async completeText(text, options = {}) {
-    return apiClient.post('/ai/complete', { text, options });
+    return apiClient.post('/api/ai/complete', { text, options });
   }
 
   async getSuggestions(text, options = {}) {
-    return apiService.post('/ai/suggestions', { text, options });
+    return apiClient.post('/api/ai/suggestions', { text, options });
   }
 
   async getAIStatus() {
-    return apiClient.get('/ai/status');
+    return apiClient.get('/api/ai/status');
   }
 }
 

@@ -14,7 +14,7 @@ router.use(authenticateToken);
 router.use(aiLimiter);
 
 // Helper function to get AI model
-const getModel = (modelName = 'gemini-pro') => {
+const getModel = (modelName = 'gemini-1.5-flash-latest') => {
   return genAI.getGenerativeModel({ model: modelName });
 };
 
