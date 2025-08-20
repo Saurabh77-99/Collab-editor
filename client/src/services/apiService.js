@@ -51,7 +51,7 @@ class ApiService {
   }
 
   async getCurrentUser() {
-    return apiClient.get('/auth/me');
+    return apiClient.get('/api/auth/me');
   }
 
   async refreshToken() {

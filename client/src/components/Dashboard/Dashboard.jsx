@@ -166,7 +166,7 @@ const Dashboard = () => {
       {/* Search and Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={6}>
+          <Grid>
             <TextField
               fullWidth
               placeholder="Search documents..."
@@ -181,7 +181,7 @@ const Dashboard = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
               <Button
                 variant="contained"
@@ -206,7 +206,7 @@ const Dashboard = () => {
       ) : (
         <Grid container spacing={3}>
           {filteredDocuments.length === 0 ? (
-            <Grid item xs={12}>
+            <Grid > {/* <-- FIX: The 'item' prop has been removed here */}
               <Paper sx={{ p: 6, textAlign: 'center' }}>
                 <Description sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
                 <Typography variant="h6" gutterBottom>
@@ -231,7 +231,7 @@ const Dashboard = () => {
             </Grid>
           ) : (
             filteredDocuments.map((doc) => (
-              <Grid item xs={12} sm={6} md={4} key={doc._id}>
+              <Grid key={doc._id}>
                 <Card
                   sx={{
                     height: '100%',
